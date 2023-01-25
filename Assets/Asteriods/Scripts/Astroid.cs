@@ -13,6 +13,8 @@ public class Astroid : MonoBehaviour
 
     private void OnDestroy()
     {
+        var gameManager = FindObjectOfType<AstroidGameManager>();
+        gameManager?.AddPoints(100);
         Instantiate(explosion, transform.position, transform.rotation);
     }
 

@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     [Range(1, 60), Tooltip("Controls the speed of the player")] public float speed = 10;
     [Range(1, 360)] public float rotationRate = 180;
     public GameObject prefab;
-    public Transform bulletSpawn;
+    public Transform[] bulletSpawn;
 
     private void Awake()
     {
@@ -41,7 +41,16 @@ public class Player : MonoBehaviour
         {
             //Debug.Log("pew!");
             //GetComponent<AudioSource>().Play();
-            GameObject go = Instantiate(prefab, bulletSpawn.position, bulletSpawn.rotation);
+            GameObject go1 = Instantiate(prefab, bulletSpawn[0].position, bulletSpawn[0].rotation);
+            GameObject go2 = Instantiate(prefab, bulletSpawn[1].position, bulletSpawn[1].rotation);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            FindObjectOfType<AstroidGameManager>()?.SetGameOver();
         }
     }
 }
