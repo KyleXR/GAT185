@@ -9,6 +9,10 @@ public class RollerPlayer : MonoBehaviour
 {
     [SerializeField] private Transform view;
     [SerializeField] private float maxForce = 5;
+
+    [SerializeField] private float groundRayLength = 1;
+    [SerializeField] private LayerMask groundLayer;
+
     private Vector3 force;
     private Rigidbody rb;
     private int score;
@@ -17,6 +21,11 @@ public class RollerPlayer : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         view = Camera.main.transform;
         Camera.main.GetComponent<RollerCamera>().SetTarget(transform);
+
+        GetComponent<Health>().onDamage += OnDamage;
+        GetComponent<Health>().onDeath += OnDeath;
+        GetComponent<Health>().onHeal += OnHeal;
+        RollerGameManager.Instance.SetHealth((int)GetComponent<Health>().health);
     }
 
     // Update is called once per frame
@@ -30,12 +39,14 @@ public class RollerPlayer : MonoBehaviour
         Quaternion viewSpace = Quaternion.AngleAxis(view.rotation.eulerAngles.y, Vector3.up);
         force = viewSpace * (direction * maxForce);
 
-        if(Input.GetButtonDown("Jump"))
-        {
-            rb.AddForce(Vector3.up * 10, ForceMode.Impulse);
-        }
+        Ray ray = new Ray(transform.position, Vector3.down);
+        bool onGround = Physics.Raycast(ray, groundRayLength, groundLayer);
+        Debug.DrawRay(transform.position, ray.direction * groundRayLength);
 
-        RollerGameManager.Instance.SetHealth(50);
+        if (onGround && Input.GetButtonDown("Jump"))
+        {
+            rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+        }
     }
 
     private void FixedUpdate()
@@ -50,4 +61,18 @@ public class RollerPlayer : MonoBehaviour
         Debug.Log(score);
     }
 
+    public void OnHeal()
+    {
+        RollerGameManager.Instance.SetHealth((int)GetComponent<Health>().health);
+    }
+    public void OnDamage()
+    {
+        RollerGameManager.Instance.SetHealth((int)GetComponent<Health>().health);
+    }
+
+    public void OnDeath()
+    {
+        RollerGameManager.Instance.SetGameOver();
+        Destroy(gameObject);
+    }
 }

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coin : Collidable
+[RequireComponent(typeof(CollisionEvent))]
+public class Coin : Interactable
 {
-    [SerializeField] GameObject pickupFX;
+    private AudioSource gameMusic;
     // Start is called before the first frame update
     void Start()
     {
-        OnEnter += OnCoinPickup;
+        GetComponent<CollisionEvent>().onEnter += OnInteract;
     }
 
     // Update is called once per frame
@@ -17,14 +18,15 @@ public class Coin : Collidable
         
     }
     
-    void OnCoinPickup(GameObject go)
+    public override void OnInteract(GameObject go)
     {
-        if(TryGetComponent<RollerPlayer>(out RollerPlayer player))
-        {
+        var player = FindObjectOfType<RollerPlayer>();
+        { 
             player.AddPoints(100);
         }
 
-        Instantiate(pickupFX, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        if(interactFX != null) Instantiate(interactFX, transform.position, Quaternion.identity);
+        if(gameMusic != null) gameMusic.Play();
+        if(destroyOnInteract) Destroy(gameObject);
     }
 }

@@ -3,18 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Cinemachine;
+
 
 public class RollerGameManager : Singleton<RollerGameManager>
 {
     [SerializeField] Slider healthMeter;
     [SerializeField] TMP_Text scoreUI;
+    [SerializeField] GameObject gameOverUI;
+    [SerializeField] GameObject gameWonUI;
+    [SerializeField] GameObject titleUI;
+    [SerializeField] AudioSource gameMusic;
 
     [SerializeField] GameObject playerPrefab;
     [SerializeField] Transform playerStart;
 
+
+    public enum State
+    {
+        TITLE,
+        START_GAME,
+        PLAY_GAME,
+        GAME_WON,
+        GAME_OVER
+    }
+
+    State state = State.TITLE;
+    float stateTimer = 1;
     private void Start()
     {
-        Instantiate(playerPrefab, playerStart.position, playerStart.rotation);
+    }
+
+    private void Update()
+    {
+        switch (state)
+        {
+            case State.TITLE:
+                titleUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                break;
+            case State.START_GAME:
+                titleUI.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                var player = Instantiate(playerPrefab, playerStart.position, playerStart.rotation);
+                FindObjectOfType<CinemachineFreeLook>().LookAt = player.transform;
+                FindObjectOfType<CinemachineFreeLook>().Follow = player.transform;
+                state = State.PLAY_GAME;
+                gameMusic.Play();
+                break;
+            case State.PLAY_GAME:
+                break;
+            case State.GAME_WON:
+                stateTimer -= Time.deltaTime;
+                if (stateTimer <= 0)
+                {
+                    gameWonUI.SetActive(false);
+                    state = State.TITLE;
+                }
+                break;
+            case State.GAME_OVER:
+                stateTimer -= Time.deltaTime;
+                if(stateTimer <= 0)
+                {
+                    gameOverUI.SetActive(false);
+                    state = State.TITLE;
+                }
+                break;
+
+
+        }
     }
 
     public void SetHealth(int health)
@@ -24,6 +82,25 @@ public class RollerGameManager : Singleton<RollerGameManager>
 
     public void SetScore(int score)
     {
-        scoreUI.text = score.ToString();
+        scoreUI.text = "Score: " + score.ToString();
+    }
+
+    public void SetGameOver()
+    {
+        gameOverUI.SetActive(true);
+        state = State.GAME_OVER;
+        stateTimer = 3;
+    }
+
+    public void SetGameWon()
+    {
+        gameWonUI.SetActive(true);
+        state = State.GAME_WON;
+        stateTimer = 5;
+    }
+
+    public void OnStartGame()
+    {
+        state = State.START_GAME;
     }
 }

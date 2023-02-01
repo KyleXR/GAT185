@@ -29,4 +29,13 @@ public class Astroid : MonoBehaviour
         transform.position += direction * speed * Time.deltaTime;
         transform.rotation = transform.rotation * Quaternion.Euler(rotation * rotationRate * Time.deltaTime);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Explosion");
+            FindObjectOfType<AstroidGameManager>().SetGameOver();
+        }
+    }
 }
