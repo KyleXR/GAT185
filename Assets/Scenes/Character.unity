@@ -208,6 +208,7 @@ GameObject:
   - component: {fileID: 335471814}
   - component: {fileID: 335471813}
   - component: {fileID: 335471812}
+  - component: {fileID: 335471818}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -314,6 +315,7 @@ MonoBehaviour:
   gravity: -9.81
   turnRate: 10
   jumpHeight: 2
+  animator: {fileID: 0}
 --- !u!4 &335471817
 Transform:
   m_ObjectHideFlags: 0
@@ -330,6 +332,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &335471818
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335471811}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: a6fbb12a83baac74b81fc2e949912a92, type: 3}
+  m_Controller: {fileID: 9100000, guid: 7e996ae83303f124880d78277baacd90, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &519260326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1053,7 +1075,8 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: a6fbb12a83baac74b81fc2e949912a92, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a6fbb12a83baac74b81fc2e949912a92, type: 3}
 --- !u!1 &1643643775
 GameObject:

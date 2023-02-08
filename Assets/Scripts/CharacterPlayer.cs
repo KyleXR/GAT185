@@ -12,11 +12,13 @@ public class CharacterPlayer : MonoBehaviour
     [SerializeField] private float gravity = Physics.gravity.y;
     [SerializeField] private float turnRate = 10;
     [SerializeField] private float jumpHeight = 2;
+    [SerializeField] private Animator animator;
 
     CharacterController characterController;
     PlayerInputActions playerInput;
     Camera mainCamera;
     Vector3 velocity = Vector3.zero;
+    float inAirTime = 0;
 
     private void OnEnable()
     {
@@ -53,21 +55,32 @@ public class CharacterPlayer : MonoBehaviour
         {
             velocity.x = direction.x * speed;
             velocity.z = direction.z * speed;
-            if (playerInput.Player.Jump.triggered)
+            inAirTime = 0;
+            
             if(Input.GetButtonDown("Jump"))
             {
+                animator.SetTrigger("Jump");
                 velocity.y = Mathf.Sqrt(jumpHeight * -3 * gravity);
             }
         }
         else
         {
+            inAirTime += Time.deltaTime;
             velocity.y += gravity * Time.deltaTime;
         }
 
         characterController.Move(velocity * speed * Time.deltaTime);
         Vector3 look = direction;
         look.y = 0;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(look), turnRate * Time.deltaTime);
+        if(look.magnitude > 0)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(look), turnRate * Time.deltaTime);
+        }
+
+        animator.SetFloat("Speed", characterController.velocity.magnitude);
+        animator.SetFloat("VelocityY", characterController.velocity.y);
+        animator.SetFloat("AirTime", inAirTime);
+        animator.SetBool("IsGrounded", characterController.isGrounded);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -101,5 +114,17 @@ public class CharacterPlayer : MonoBehaviour
     {
         if(context.performed) Debug.Log("Jump");
 
+    }
+
+    public void OnLeftFootSpawn(GameObject go)
+    {
+        Transform bone = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+        Instantiate(go, bone.position, bone.rotation);
+    }
+
+    public void OnRightFootSpawn(GameObject go)
+    {
+        Transform bone = animator.GetBoneTransform(HumanBodyBones.RightFoot);
+        Instantiate(go, bone.position, bone.rotation);
     }
 }
