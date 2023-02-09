@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,22 +14,14 @@ public class CharacterPlayer : MonoBehaviour
     [SerializeField] private float turnRate = 10;
     [SerializeField] private float jumpHeight = 2;
     [SerializeField] private Animator animator;
+    [SerializeField] private InputRouter inputRouter;
 
     CharacterController characterController;
-    PlayerInputActions playerInput;
+    Vector2 inputAxis;
+
     Camera mainCamera;
     Vector3 velocity = Vector3.zero;
     float inAirTime = 0;
-
-    private void OnEnable()
-    {
-        playerInput.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerInput.Disable();
-    }
 
     private void Awake()
     {
@@ -39,15 +32,42 @@ public class CharacterPlayer : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         mainCamera = Camera.main;
+
+        inputRouter.jumpEvent += OnJump;
+        inputRouter.moveEvent += OnMove;
+        inputRouter.fireEvent += OnFire;
+        inputRouter.fireStopEvent += OnFireStop;
+    }
+
+    public void OnJump()
+    {
+        animator.SetTrigger("Jump");
+        velocity.y = Mathf.Sqrt(jumpHeight * -3 * gravity);
+    }
+
+    public void OnFire()
+    {
+
+    }
+
+    public void OnFireStop()
+    {
+
+    }
+
+
+    public void OnMove(Vector2 axis)
+    {
+        inputAxis = axis;
     }
 
     void Update()
     {
         Vector3 direction = Vector3.zero;
-        Vector2 axis = playerInput.Player.Move.ReadValue<Vector2>();
 
-        direction.x = axis.x;
-        direction.z = axis.y;
+
+        direction.x = inputAxis.x;
+        direction.z = inputAxis.y;
 
         direction = mainCamera.transform.TransformDirection(direction);
 
@@ -112,6 +132,7 @@ public class CharacterPlayer : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+
         if(context.performed) Debug.Log("Jump");
 
     }
