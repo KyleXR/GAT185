@@ -8,13 +8,11 @@ using UnityEngine.InputSystem;
 
 public class CharacterPlayer : MonoBehaviour
 {
-    [SerializeField] private float speed = 5;
-    [SerializeField] private float hitForce = 2;
-    [SerializeField] private float gravity = Physics.gravity.y;
-    [SerializeField] private float turnRate = 10;
-    [SerializeField] private float jumpHeight = 2;
+    
     [SerializeField] private Animator animator;
     [SerializeField] private InputRouter inputRouter;
+    [SerializeField] private PlayerData playerData;
+    [SerializeField] private Inventory inventory;
 
     CharacterController characterController;
     Vector2 inputAxis;
@@ -37,28 +35,40 @@ public class CharacterPlayer : MonoBehaviour
         inputRouter.moveEvent += OnMove;
         inputRouter.fireEvent += OnFire;
         inputRouter.fireStopEvent += OnFireStop;
+        inputRouter.nextItemEvent += OnNextItem;
     }
 
     public void OnJump()
     {
         animator.SetTrigger("Jump");
-        velocity.y = Mathf.Sqrt(jumpHeight * -3 * gravity);
+        velocity.y = Mathf.Sqrt(playerData.jumpHeight * -3 * playerData.gravity);
     }
 
     public void OnFire()
     {
-
+        //Debug.Log("attack");
+        animator.SetTrigger("Attack");
+        inventory.Use();
     }
 
     public void OnFireStop()
     {
-
+        inventory.StopUse();
     }
 
+    public void OnNextItem()
+    {
+        inventory.EquipNextItem();
+    }
 
     public void OnMove(Vector2 axis)
     {
         inputAxis = axis;
+    }
+
+    public void OnAnimEventItemUse()
+    {
+        inventory.OnAnimEventItemUse();
     }
 
     void Update()
@@ -73,28 +83,28 @@ public class CharacterPlayer : MonoBehaviour
 
         if( characterController.isGrounded)
         {
-            velocity.x = direction.x * speed;
-            velocity.z = direction.z * speed;
+            velocity.x = direction.x * playerData.speed;
+            velocity.z = direction.z * playerData.speed;
             inAirTime = 0;
             
             if(Input.GetButtonDown("Jump"))
             {
                 animator.SetTrigger("Jump");
-                velocity.y = Mathf.Sqrt(jumpHeight * -3 * gravity);
+                velocity.y = Mathf.Sqrt(playerData.jumpHeight * -3 * playerData.gravity);
             }
         }
         else
         {
             inAirTime += Time.deltaTime;
-            velocity.y += gravity * Time.deltaTime;
+            velocity.y += playerData.gravity * Time.deltaTime;
         }
 
-        characterController.Move(velocity * speed * Time.deltaTime);
+        characterController.Move(velocity * playerData.speed * Time.deltaTime);
         Vector3 look = direction;
         look.y = 0;
         if(look.magnitude > 0)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(look), turnRate * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(look), playerData.turnRate * Time.deltaTime);
         }
 
         animator.SetFloat("Speed", characterController.velocity.magnitude);
@@ -127,7 +137,7 @@ public class CharacterPlayer : MonoBehaviour
         // then you can also multiply the push velocity by that.
 
         // Apply the push
-        body.velocity = pushDir * hitForce;
+        body.velocity = pushDir * playerData.hitForce;
     }
 
     public void OnJump(InputAction.CallbackContext context)
