@@ -1,29 +1,9 @@
 fileFormatVersion: 2
-guid: a6fbb12a83baac74b81fc2e949912a92
+guid: 8b40caf2c034d3246a4b2db9c9ec24e4
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Arissa_MAT
-    second: {fileID: 2100000, guid: 402569d23b0692043bdc72d02ad674a0, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Arissa_DIFF_diffuse
-    second: {fileID: 2800000, guid: 8438e37820ae5f84dbc938e462c254c4, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Arissa_NM_normal
-    second: {fileID: 2800000, guid: ad8600f7782a2484ea840e4140232190, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Arissa_SPEC_specular
-    second: {fileID: 2800000, guid: 0cab1ddb0b280ce4b925aa8740c615c3, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -95,14 +75,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips:
-  - fb499112b3efec1489dcaf754aec567f
-  - 5663d3e8a1c613a4a95cf3654fc12a61
-  - d6e596e528e6d4446a18348b91c61554
-  - 8b40caf2c034d3246a4b2db9c9ec24e4
-  - 2a991b042d554064395afd69ba18e0a7
-  - 4e2bf9f4ff2480c4c9b5566c2172f9a1
-  - 8645492ced85028408ed8ea6668d13f4
+  referencedClips: []
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -939,11 +912,11 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: a6fbb12a83baac74b81fc2e949912a92, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
